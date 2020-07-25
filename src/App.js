@@ -1,24 +1,40 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import { connect } from 'react-redux';
 import './App.css';
 
-function App() {
+import {verifyLogin} from './redux/user/actions';
+
+function App(props) {
+  useEffect(() => {
+    props.verifyLogin();
+    console.log(props.login);
+  }, []);
+
+  let titulo = "nada";
+
+  if(props.login)
+    titulo = "entrou";
+  
+  if(!props.login)
+    titulo = "publico";
+
   return (
     <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {titulo}
     </div>
   );
 }
 
-export default App;
+function mapStateToProps(state){
+  return {
+    login: state.user.login
+  };
+}
+
+function mapDispatchToProps(dispatch){
+  return {
+    verifyLogin: () => dispatch(verifyLogin())
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
